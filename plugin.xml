@@ -16,7 +16,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
     <engines>
         <engine name="cordova" version=">=10.0.0"/>
-        <engine name="cordova-android" version=">=11.0.0"/>
+        <engine name="cordova-android" version=">=8.1.0"/>
         <engine name="cordova-ios" version=">=6.0.0"/>
     </engines>
 
@@ -69,7 +69,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
         <config-file target="config.xml" parent="/*">
             <preference name="AndroidXEnabled" value="true" />
-            <preference name="GradlePluginGoogleServicesEnabled" value="true" />
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
