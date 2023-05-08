@@ -70,14 +70,14 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
         lastBundle = getNotificationData(cordova.getActivity().getIntent());
     }
 
-    @CordovaMethod(WORKER)
-    private void subscribe(CordovaArgs args, final CallbackContext callbackContext) throws Exception {
+    @CordovaMethod
+    private void subscribe(CordovaArgs args, CallbackContext callbackContext) throws Exception {
         String topic = args.getString(0);
         await(firebaseMessaging.subscribeToTopic(topic));
         callbackContext.success();
     }
 
-    @CordovaMethod(WORKER)
+    @CordovaMethod
     private void unsubscribe(CordovaArgs args, CallbackContext callbackContext) throws Exception {
         String topic = args.getString(0);
         await(firebaseMessaging.unsubscribeFromTopic(topic));
@@ -96,7 +96,7 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
         callbackContext.success();
     }
 
-    @CordovaMethod(WORKER)
+    @CordovaMethod
     private void getToken(CordovaArgs args, CallbackContext callbackContext) throws Exception {
         String type = args.getString(0);
         if (!type.isEmpty()) {
