@@ -1,5 +1,6 @@
 package by.chemerisuk.cordova.firebase;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.core.app.NotificationManagerCompat;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
@@ -32,7 +35,6 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
-
 public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     private static final String TAG = "FCMPlugin";
 
@@ -45,6 +47,18 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     private static FirebaseMessagingPlugin instance;
     private NotificationManager notificationManager;
     private FirebaseMessaging firebaseMessaging;
+    private CallbackContext requestPermissionCallback;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = cordova.getActivity()
+        .registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(), isGranted -> {
+                        if (isGranted) {
+                            // FCM SDK (and your app) can post notifications.
+                            requestPermissionCallback.success();
+                        } else {
+                            requestPermissionCallback.error("Notifications permission is not granted");
+                        }
+    });
 
     @Override
     protected void pluginInitialize() {
@@ -80,34 +94,24 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     @CordovaMethod
     private void clearNotifications(CallbackContext callbackContext) {
         notificationManager.cancelAll();
-
         callbackContext.success();
     }
 
-    @CordovaMethod
-    private void deleteToken(CallbackContext callbackContext) {
-        firebaseMessaging.deleteToken().addOnCompleteListener(cordova.getActivity(), task -> {
-            if (task.isSuccessful()) {
-                callbackContext.success();
-            } else {
-                callbackContext.error(task.getException().getMessage());
-            }
-        });
+    @CordovaMethod(WORKER)
+    private void deleteToken(CallbackContext callbackContext) throws Exception {
+        await(firebaseMessaging.deleteToken());
+        callbackContext.success();
     }
 
-    @CordovaMethod
-    private void getToken(String type, final CallbackContext callbackContext) {
-        if (type.isEmpty()) {
-            firebaseMessaging.getToken().addOnCompleteListener(cordova.getActivity(), task -> {
-                if (task.isSuccessful()) {
-                    callbackContext.success(task.getResult());
-                } else {
-                    callbackContext.error(task.getException().getMessage());
-                }
-            });
+    @CordovaMethod(WORKER)
+    @CordovaMethod(WORKER)
+    private void getToken(CordovaArgs args, CallbackContext callbackContext) throws Exception {
+        String type = args.getString(0);
+        if (!type.isEmpty()) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, (String) null));
         } else {
-            callbackContext.sendPluginResult(
-                new PluginResult(PluginResult.Status.OK, (String)null));
+            String fcmToken = await(firebaseMessaging.getToken());
+            callbackContext.success(fcmToken);
         }
     }
 
@@ -151,15 +155,21 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     }
 
     @CordovaMethod
-    private void requestPermission(JSONObject options, CallbackContext callbackContext) {
+    private void requestPermission(CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+        JSONObject options = args.getJSONObject(0);
         Context context = cordova.getActivity().getApplicationContext();
-
-        this.forceShow = options.optBoolean("forceShow");
-
+        forceShow = options.optBoolean("forceShow");
         if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
             callbackContext.success();
         } else {
-            callbackContext.error("Notifications permission is not granted");
+            if (Build.VERSION.SDK_INT >= 33) {
+                if (cordova.hasPermission(Manifest.permission.POST_NOTIFICATIONS))
+                    return;
+                requestPermissionCallback = callbackContext;
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            } else {
+                callbackContext.error("Notifications permission is not granted");
+            }
         }
     }
 
@@ -282,8 +292,8 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
             notificationData.put("google.sent_time", remoteMessage.getSentTime());
 
             if (instance != null) {
-                CallbackContext callbackContext = instance.isBackground ?
-                    instance.backgroundCallback : instance.foregroundCallback;
+                CallbackContext callbackContext = instance.isBackground ? instance.backgroundCallback
+                        : instance.foregroundCallback;
                 instance.sendNotification(notificationData, callbackContext);
             }
         } catch (JSONException e) {
