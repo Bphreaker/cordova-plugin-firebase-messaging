@@ -48,7 +48,7 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     private FirebaseMessaging firebaseMessaging;
     private CallbackContext requestPermissionCallback;
 
-    private final ActivityResultLauncher<String> requestPermissionLauncher = cordova.getActivity().registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
                 // FCM SDK (and your app) can post notifications.
                 requestPermissionCallback.success();
