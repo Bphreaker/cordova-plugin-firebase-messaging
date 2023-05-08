@@ -21,6 +21,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaArgs;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,26 +70,18 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
         lastBundle = getNotificationData(cordova.getActivity().getIntent());
     }
 
-    @CordovaMethod
-    private void subscribe(String topic, final CallbackContext callbackContext) {
-        firebaseMessaging.subscribeToTopic(topic).addOnCompleteListener(cordova.getActivity(), task -> {
-            if (task.isSuccessful()) {
-                callbackContext.success();
-            } else {
-                callbackContext.error(task.getException().getMessage());
-            }
-        });
+    @CordovaMethod(WORKER)
+    private void subscribe(CordovaArgs args, final CallbackContext callbackContext) throws Exception {
+        String topic = args.getString(0);
+        await(firebaseMessaging.subscribeToTopic(topic));
+        callbackContext.success();
     }
 
-    @CordovaMethod
-    private void unsubscribe(String topic, final CallbackContext callbackContext) {
-        firebaseMessaging.unsubscribeFromTopic(topic).addOnCompleteListener(cordova.getActivity(), task -> {
-            if (task.isSuccessful()) {
-                callbackContext.success();
-            } else {
-                callbackContext.error(task.getException().getMessage());
-            }
-        });
+    @CordovaMethod(WORKER)
+    private void unsubscribe(CordovaArgs args, CallbackContext callbackContext) throws Exception {
+        String topic = args.getString(0);
+        await(firebaseMessaging.unsubscribeFromTopic(topic));
+        callbackContext.success();
     }
 
     @CordovaMethod
@@ -103,7 +96,7 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
         callbackContext.success();
     }
 
-    @CordovaMethod
+    @CordovaMethod(WORKER)
     private void getToken(CordovaArgs args, CallbackContext callbackContext) throws Exception {
         String type = args.getString(0);
         if (!type.isEmpty()) {
