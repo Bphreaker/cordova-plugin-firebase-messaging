@@ -97,13 +97,13 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
         callbackContext.success();
     }
 
-    @CordovaMethod(WORKER)
+    @CordovaMethod
     private void deleteToken(CallbackContext callbackContext) throws Exception {
         await(firebaseMessaging.deleteToken());
         callbackContext.success();
     }
 
-    @CordovaMethod(WORKER)
+    @CordovaMethod
     private void getToken(CordovaArgs args, CallbackContext callbackContext) throws Exception {
         String type = args.getString(0);
         if (!type.isEmpty()) {
