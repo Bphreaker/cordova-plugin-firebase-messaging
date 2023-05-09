@@ -50,11 +50,12 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     private CallbackContext requestPermissionCallback;
     
     
-    private void requestPermission(CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+    private void requestPermission(JSONObject options, CallbackContext callbackContext) throws JSONException {
 		CordovaPlugin plugin = this;
-		JSONObject options = args.getJSONObject(0);
+		//JSONObject options = args.getJSONObject(0);
 		Context context = cordova.getActivity().getApplicationContext();
-		forceShow = options.optBoolean("forceShow");
+	    	forceShow = options.optBoolean("forceShow");
+		//forceShow = options.optBoolean("forceShow");
 		if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
 			callbackContext.success();
 		} else {
