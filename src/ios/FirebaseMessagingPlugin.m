@@ -3,7 +3,7 @@
 #import "AppDelegate.h"
 
 @import FirebaseCore;
-@import FirebaseMessaging;
+@import Firebase;
 
 @implementation FirebaseMessagingPlugin
 
