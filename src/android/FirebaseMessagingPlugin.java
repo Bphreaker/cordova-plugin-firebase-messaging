@@ -109,15 +109,13 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     }
 
     @CordovaMethod
-    private void subscribe(CordovaArgs args, final CallbackContext callbackContext) throws Exception {
-        String topic = args.getString(0);
+    private void subscribe(String topic, final CallbackContext callbackContext) throws Exception {
         await(firebaseMessaging.subscribeToTopic(topic));
         callbackContext.success();
     }
 
     @CordovaMethod
-    private void unsubscribe(CordovaArgs args, CallbackContext callbackContext) throws Exception {
-        String topic = args.getString(0);
+    private void unsubscribe(String topic, CallbackContext callbackContext) throws Exception {
         await(firebaseMessaging.unsubscribeFromTopic(topic));
         callbackContext.success();
     }
@@ -136,7 +134,6 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
 
     @CordovaMethod
     private void getToken(String type, CallbackContext callbackContext) throws Exception {
-        //String type = args.getString(0);
         if (!type.isEmpty()) {
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, (String) null));
         } else {
@@ -166,8 +163,7 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     }
 
     @CordovaMethod
-    private void setBadge(CordovaArgs args, CallbackContext callbackContext) throws JSONException {
-        int value = args.getInt(0);
+    private void setBadge(int value, CallbackContext callbackContext) throws JSONException {
         if (value >= 0) {
             Context context = cordova.getActivity().getApplicationContext();
             ShortcutBadger.applyCount(context, value);
