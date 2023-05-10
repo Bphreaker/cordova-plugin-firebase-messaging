@@ -49,7 +49,7 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     private FirebaseMessaging firebaseMessaging;
     private CallbackContext requestPermissionCallback;
     
-    
+    @CordovaMethod
     private void requestPermission(JSONObject options, CallbackContext callbackContext) throws JSONException {
 		CordovaPlugin plugin = this;
 		//JSONObject options = args.getJSONObject(0);
