@@ -52,7 +52,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="FirebaseMessaging" spec="8.6.0"/>
+                <pod name="FirebaseMessaging" spec="9.3.0"/>
             </pods>
         </podspec>
     </platform>
