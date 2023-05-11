@@ -29,7 +29,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 <param name="ios-package" value="FirebaseMessagingPlugin" />
                 <param name="onload" value="true" />
             </feature>
-            <preference name="deployment-target" value="13" />
+            
         </config-file>
 
         <config-file target="*-Info.plist" parent="UIBackgroundModes">
@@ -53,8 +53,8 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             <config>
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
-            <pods use-frameworks="true">
-                <pod name="FirebaseMessaging"/>
+            <pods>
+                <pod name="Firebase/Messaging"/>
             </pods>
         </podspec>
     </platform>
