@@ -22,7 +22,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
     <platform name="ios">
         <preference name="IOS_FIREBASE_POD_VERSION" default="9.3.0" />
-        <preference name="deployment-target" value="13.0" />
+        <preference name="DEPLOYMENT-TARGET" value="10.0" />
  
         <config-file target="config.xml" parent="/*">
             <feature name="FirebaseMessaging">
