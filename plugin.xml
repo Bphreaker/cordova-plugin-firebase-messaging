@@ -14,7 +14,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <merges target="cordova.plugins.firebase.messaging" />
     </js-module>
 
-    <dependency id="cordova-outsystems-firebase-core" url="https://github.com/OutSystems/cordova-outsystems-firebase-core.git#1.0.0"/>
+    <dependency id="cordova-plugin-firebase-analytics" version="5.0.0-OS9"/>
            
     <engines>
         <engine name="cordova" version=">=10.0.0"/>
