@@ -20,6 +20,8 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <engine name="cordova-ios" version=">=6.0.0"/>
     </engines>
 
+    <dependency id="cordova-plugin-firebase-analytics" version="5.0.0-OS9"/>
+           
     <platform name="ios">
         
  
@@ -51,8 +53,8 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             <config>
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
-            <pods use-frameworks="true">
-                <pod name="Firebase/Messaging" spec="8.6.0"/>
+            <pods>
+                <pod name="Firebase/Messaging" />
             </pods>
         </podspec>
     </platform>
