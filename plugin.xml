@@ -21,8 +21,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     </engines>
 
     <platform name="ios">
-        <preference name="IOS_FIREBASE_POD_VERSION" default="9.3.0" />
-        <preference name="DEPLOYMENT-TARGET" value="12.0" />
+        
  
         <config-file target="config.xml" parent="/*">
             <feature name="FirebaseMessaging">
@@ -53,7 +52,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="FirebaseMessaging" spec="8.6.0"/>
+                <pod name="Firebase/Messaging" spec="8.6.0"/>
             </pods>
         </podspec>
     </platform>
